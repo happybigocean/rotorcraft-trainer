@@ -89,28 +89,6 @@ firebase login
 firebase init hosting
 firebase deploy
 ```
-
----
-
-## 🔐 Environment Variables (If Needed)
-
-If you use environment variables (e.g. for API keys):
-
-Create a `.env` file in the root:
-
-```
-VITE_OPENAI_API_KEY=your_openai_key
-VITE_FIREBASE_API_KEY=your_firebase_key
-```
-
-And access them in code using:
-
-```js
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-```
-
----
-
 ## ✅ To Do
 
 - [ ] Add Firebase integration (Auth, Firestore)
@@ -118,14 +96,6 @@ const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 - [ ] Build Scenario Trainer UI
 - [ ] Implement AI-generated checkride feedback
 - [ ] Deploy to hosting platform
-
----
-
-## 🧠 Author
-
-Built by [Your Name] • @yourhandle
-
----
 
 ## 📄 License
 
