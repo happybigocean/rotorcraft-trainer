@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    allowedHosts: ['attentify-frontend.onrender.com'],
+    allowedHosts: ['rotorcraft-trainer.onrender.com', 'localhost'],
   },
   plugins: [
     react(),
