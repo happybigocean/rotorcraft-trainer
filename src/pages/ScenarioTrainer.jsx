@@ -1,66 +1,27 @@
 // src/pages/ScenarioTrainer.jsx
 import { useState } from "react";
-import ScenarioSelector from "../components/ScenarioSelector";
-import ScenarioPlayer from "../components/ScenarioPlayer";
-import DebriefCard from "../components/DebriefCard";
-
-const mockScenarios = [
-  {
-    title: "Engine Failure at 400’ AGL",
-    description: "Practice decision making at low altitude failure.",
-    question: "Engine fails at 400 feet — what's your immediate action?",
-    options: ["Enter autorotation", "Call ATC", "Try restart", "Climb higher"]
-  },
-  {
-    title: "Low RPM Warning in Cruise",
-    description: "Identify what actions to take with RPM drop.",
-    question: "Low RPM warning during cruise. What do you do?",
-    options: ["Lower collective", "Increase throttle", "Descend", "Pull carb heat"]
-  }
-];
+import ScenarioSelector from "../components/scenario/ScenarioSelector";
+import ScenarioPlayer from "../components/scenario/ScenarioPlayer";
+import DebriefCard from "../components/scenario/DebriefCard";
+import scenarios from "../data/scenarios";
 
 const ScenarioTrainer = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [feedback, setFeedback] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [debrief, setDebrief] = useState("");
 
-  const handleSelectScenario = (index) => {
-    setSelectedIndex(index);
-    setHistory([]);
-    setFeedback("");
+  const handleComplete = (result) => setDebrief(result);
+  const handleReset = () => {
+    setSelected(null);
+    setDebrief("");
   };
-
-  const handleAnswer = (answer) => {
-    setHistory((prev) => [...prev, answer]);
-
-    // Simulate scenario end after 1 answer for now
-    const simulatedFeedback = `Good choice selecting "${answer}". In this scenario, prompt autorotation is typically best.`;
-    setFeedback(simulatedFeedback);
-  };
-
-  const handleRestart = () => {
-    setSelectedIndex(null);
-    setHistory([]);
-    setFeedback("");
-  };
-
-  const selectedScenario = mockScenarios[selectedIndex];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      {selectedIndex === null && (
-        <ScenarioSelector scenarios={mockScenarios} onSelect={handleSelectScenario} />
-      )}
-      {selectedScenario && !feedback && (
-        <ScenarioPlayer scenario={selectedScenario} onAnswer={handleAnswer} />
-      )}
-      {feedback && (
-        <DebriefCard
-          decisionHistory={history}
-          feedback={feedback}
-          onRestart={handleRestart}
-        />
-      )}
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">🚁 Scenario Trainer</h1>
+
+      {!selected && <ScenarioSelector scenarios={scenarios} onSelect={setSelected} />}
+      {selected && !debrief && <ScenarioPlayer scenario={selected} onComplete={handleComplete} />}
+      {selected && debrief && <DebriefCard feedback={debrief} onReset={handleReset} />}
     </div>
   );
 };
