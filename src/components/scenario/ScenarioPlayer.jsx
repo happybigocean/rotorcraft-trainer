@@ -1,23 +1,35 @@
-// src/components/ScenarioPlayer.jsx
 import { useState } from "react";
+import { getDebriefFromOpenAI } from "../../utils/openai"; // Adjust the import path as needed
 
 const ScenarioPlayer = ({ scenario, onComplete }) => {
   const [stepIndex, setStepIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [history, setHistory] = useState([]);
   const step = scenario.steps[stepIndex];
 
-  const handleChoice = (choice) => {
+  const handleChoice = async (choice) => {
+    // Save user choice for later GPT feedback
+    const updatedHistory = [
+      ...history,
+      {
+        prompt: step.prompt,
+        choice: choice.text,
+        correct: choice.correct,
+      },
+    ];
+    setHistory(updatedHistory);
+
     if (choice.correct) setCorrectCount((prev) => prev + 1);
 
     const nextStep = stepIndex + 1;
     if (nextStep < scenario.steps.length) {
       setStepIndex(nextStep);
     } else {
-      const passed = correctCount + (choice.correct ? 1 : 0) === scenario.steps.length;
-      onComplete(
-        passed ? scenario.debrief.success : scenario.debrief.fail,
-        passed ? "success" : "fail"
-      );
+      // ✅ Scenario complete — make OpenAI request with decision history
+      const feedback = await getDebriefFromOpenAI(scenario.title, updatedHistory);
+      const passed = updatedHistory.every((step) => step.correct);
+
+      onComplete(feedback, passed ? "success" : "fail");
     }
   };
 

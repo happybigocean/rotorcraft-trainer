@@ -11,6 +11,8 @@ lerna-debug.log*
 node_modules/
 
 # Environment files
+functions/node_modules/
+functions/.runtimeconfig.json
 .env
 .env.*.local
 *.local
