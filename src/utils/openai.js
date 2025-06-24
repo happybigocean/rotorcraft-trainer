@@ -1,6 +1,6 @@
 export const getDebriefFromOpenAI = async (scenarioTitle, decisionHistory) => {
   try {
-    const res = await fetch("http://127.0.0.1:5001/rotor-ai/us-central1/generateDebrief", {
+    const res = await fetch("https://generatedebrief-c6t4jxyuqa-uc.a.run.app", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
