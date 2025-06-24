@@ -7,17 +7,15 @@ const openai = new OpenAI({
 });
 
 exports.generateDebrief = onRequest({ timeoutSeconds: 30 }, async (req, res) => {
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
-    res.set({
-      "Access-Control-Allow-Origin": "*", // or "http://localhost:5173" for stricter control
-      "Access-Control-Allow-Methods": "POST",
-      "Access-Control-Allow-Headers": "Content-Type",
-    });
-    return res.status(204).send(""); // No Content
-  }
+  // Set CORS headers for all responses
+  res.set('Access-Control-Allow-Origin', '*'); // Or restrict to 'http://localhost:5173'
+  res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
 
-  res.set("Access-Control-Allow-Origin", "*"); // CORS header for actual response
+  // Handle CORS preflight (OPTIONS) request
+  if (req.method === 'OPTIONS') {
+    return res.status(204).send('');
+  }
 
   const { scenario, history } = req.body;
 
@@ -42,7 +40,7 @@ Please give a constructive, friendly debrief. Focus on what they did well, what 
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4", // Use GPT-4 here
       messages: [{ role: "user", content: prompt }],
     });
 
