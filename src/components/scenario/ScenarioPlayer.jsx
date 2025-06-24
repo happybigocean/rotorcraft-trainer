@@ -14,7 +14,10 @@ const ScenarioPlayer = ({ scenario, onComplete }) => {
       setStepIndex(nextStep);
     } else {
       const passed = correctCount + (choice.correct ? 1 : 0) === scenario.steps.length;
-      onComplete(passed ? scenario.debrief.success : scenario.debrief.fail);
+      onComplete(
+        passed ? scenario.debrief.success : scenario.debrief.fail,
+        passed ? "success" : "fail"
+      );
     }
   };
 

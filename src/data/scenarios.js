@@ -27,17 +27,17 @@ const scenarios = [
             {
                 "prompt": "What’s your final flare plan?",
                 "choices": [
-                { "label": "A", "text": "Flare at 40’, level, raise collective at 5–10’", "correct": true },
-                { "label": "B", "text": "Pull full collective early", "correct": false },
-                { "label": "C", "text": "Delay flare for smoother touchdown", "correct": false },
-                { "label": "D", "text": "Flare at 100’", "correct": false }
+                    { "label": "A", "text": "Flare at 40’, level, raise collective at 5–10’", "correct": true },
+                    { "label": "B", "text": "Pull full collective early", "correct": false },
+                    { "label": "C", "text": "Delay flare for smoother touchdown", "correct": false },
+                    { "label": "D", "text": "Flare at 100’", "correct": false }
                 ]
             }
         ],
         "debrief": {
             "success": "Excellent RPM control and judgment. Maintain better site scanning in cruise to reduce decision lag.",
             "fail": "Critical rotor management error. Review POH guidance on cruise autorotation procedures."
-    }
+        }
     },
     {
         "id": "TRHoverFail",
@@ -47,19 +47,19 @@ const scenarios = [
         {
             "prompt": "What’s happening?",
             "choices": [
-            { "label": "A", "text": "LTE onset", "correct": false },
-            { "label": "B", "text": "Cyclic failure", "correct": false },
-            { "label": "C", "text": "Tail rotor failure", "correct": true },
-            { "label": "D", "text": "Low rotor RPM", "correct": false }
+                { "label": "A", "text": "LTE onset", "correct": false },
+                { "label": "B", "text": "Cyclic failure", "correct": false },
+                { "label": "C", "text": "Tail rotor failure", "correct": true },
+                { "label": "D", "text": "Low rotor RPM", "correct": false }
             ]
         },
         {
-        "prompt": "What should you do?",
-        "choices": [
-            { "label": "A", "text": "Chop throttle and land vertically", "correct": true },
-            { "label": "B", "text": "Climb and try forward flight", "correct": false },
-            { "label": "C", "text": "Apply full left pedal", "correct": false },
-            { "label": "D", "text": "Try to yaw opposite with cyclic", "correct": false }
+            "prompt": "What should you do?",
+            "choices": [
+                { "label": "A", "text": "Chop throttle and land vertically", "correct": true },
+                { "label": "B", "text": "Climb and try forward flight", "correct": false },
+                { "label": "C", "text": "Apply full left pedal", "correct": false },
+                { "label": "D", "text": "Try to yaw opposite with cyclic", "correct": false }
             ]
         },
         {
