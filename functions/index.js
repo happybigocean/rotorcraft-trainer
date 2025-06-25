@@ -70,7 +70,9 @@ exports.generateCheckrideFeedback = onRequest({ timeoutSeconds: 30 }, async (req
   }
 
   const prompt = `
-You are a helicopter checkride examiner. A student was asked this oral question:
+You are a helicopter checkride examiner providing oral exam feedback directly to the student.
+
+The student was asked:
 
 Question: "${question}"
 
@@ -78,12 +80,18 @@ Correct Answer: "${correct_answer}"
 
 Student's Answer: "${user_answer}"
 
-Please provide clear, constructive feedback. First, state if their answer is correct, partially correct, or incorrect. Then, explain what the student did well, what was missing, and how to improve. Be concise, supportive, and educational.
+Now, write your feedback as if you are speaking directly to the student. Begin by clearly stating whether their answer is correct, partially correct, or incorrect (e.g., "You are correct," or "You're partially correct..."). Then, in a professional, supportive tone, explain:
+
+- What they did well
+- What was missing or incorrect
+- How they can improve or remember the right answer in future
+
+Be concise, constructive, and educational, as if coaching a student during a real checkride.
 `;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // or "gpt-4"
+      model: "gpt-4", // or "gpt-4" gpt-3.5-turbo
       messages: [{ role: "user", content: prompt }],
     });
 
