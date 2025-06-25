@@ -1,56 +1,88 @@
-// src/pages/CheckridePrep.jsx
-import { useState } from "react";
-import TopicSelector from "../components/TopicSelector";
-import QuestionCard from "../components/QuestionCard";
-import FeedbackCard from "../components/FeedbackCard";
+import { useState, useEffect } from "react";
+import QuestionCard from "../components/checkride/QuestionCard";
+import FeedbackCard from "../components/checkride/FeedbackCard";
 
-const mockQuestions = [
-  { topic: "Airspace", text: "Explain Class D airspace requirements." },
-  { topic: "Weather", text: "What are the minimum VFR requirements for Class G?" },
-  { topic: "Systems", text: "Describe the fuel system on the R44." },
-  { topic: "Airspace", text: "Can you enter Class B without a clearance?" },
-];
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
+import { getCheckrideFeedbackFromAI } from "../utils/openai";
+
+// Utility to get a random question index, avoiding immediate repeats
+const getRandomIndex = (excludeIdx, length) => {
+  if (length <= 1) return 0;
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * length);
+  } while (idx === excludeIdx);
+  return idx;
+};
 
 const CheckridePrep = () => {
-  const [topic, setTopic] = useState("");
-  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [currentIdx, setCurrentIdx] = useState(null);
   const [feedback, setFeedback] = useState("");
+  const [lastAnswer, setLastAnswer] = useState("");
+  const [questionsData, setQuestionsData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getRandomQuestion = (filtered) => {
-    const pool = filtered.length ? filtered : mockQuestions;
-    return pool[Math.floor(Math.random() * pool.length)];
-  };
+  // Fetch questions from Firestore on mount
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const snapshot = await getDocs(collection(db, "checkrideQuestions"));
+      const loaded = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setQuestionsData(loaded);
+      setLoading(false);
+      // Pick the first random question after load
+      setCurrentIdx(loaded.length > 0 ? getRandomIndex(-1, loaded.length) : null);
+    };
 
-  const handleTopicChange = (newTopic) => {
-    setTopic(newTopic);
-    setFeedback("");
-    const filtered = mockQuestions.filter((q) => !newTopic || q.topic === newTopic);
-    setCurrentQuestion(getRandomQuestion(filtered));
-  };
+    fetchQuestions();
+  }, []);
 
-  const handleSubmitAnswer = (userAnswer) => {
-    // 🔄 In real app, call GPT backend with question + answer
-    const mockFeedback = `Good response. You covered the key points about "${currentQuestion.topic}". Remember to mention clearance limits.`;
-    setFeedback(mockFeedback);
+  const currentQuestion = currentIdx !== null ? questionsData[currentIdx] : null;
+
+  const handleSubmitAnswer = async (userAnswer) => {
+    const feedback = await getCheckrideFeedbackFromAI(
+      currentQuestion.text,
+      currentQuestion.answer,
+      userAnswer
+    );
+    setFeedback(feedback);
   };
 
   const handleNext = () => {
-    handleTopicChange(topic); // Pull next question with same filter
     setFeedback("");
+    setLastAnswer("");
+    if (questionsData.length > 1) {
+      setCurrentIdx(getRandomIndex(currentIdx, questionsData.length));
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto py-10 px-4">
+        <h1 className="text-3xl font-bold mb-6">Check-ride Prep</h1>
+        <p>Loading questions...</p>
+      </div>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <div className="max-w-3xl mx-auto py-10 px-4">
+        <h1 className="text-3xl font-bold mb-6">Check-ride Prep</h1>
+        <p>No questions available.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
       <h1 className="text-3xl font-bold mb-6">Check-ride Prep</h1>
-      <TopicSelector
-        topics={[...new Set(mockQuestions.map((q) => q.topic))]}
-        selected={topic}
-        onChange={handleTopicChange}
-      />
       {currentQuestion && !feedback && (
         <QuestionCard question={currentQuestion} onSubmit={handleSubmitAnswer} />
       )}
-      {feedback && <FeedbackCard feedback={feedback} onNext={handleNext} />}
+      {feedback && (
+        <FeedbackCard feedback={feedback} onNext={handleNext} />
+      )}
     </div>
   );
 };

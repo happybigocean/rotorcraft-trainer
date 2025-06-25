@@ -18,3 +18,26 @@ export const getDebriefFromOpenAI = async (scenarioTitle, decisionHistory) => {
     return "Unable to generate debrief. Please try again later.";
   }
 };
+
+export const getCheckrideFeedbackFromAI = async (questionText, correctAnswer, userAnswer) => {
+  try {
+    const res = await fetch("https://us-central1-rotor-ai.cloudfunctions.net/generateCheckrideFeedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: questionText,
+        correct_answer: correctAnswer,
+        user_answer: userAnswer,
+      }),
+    });
+
+    const data = await res.json();
+    // Expecting the backend to return { feedback: "..." }
+    return data.feedback;
+  } catch (err) {
+    console.error("Error getting checkride AI feedback:", err);
+    return "Unable to generate feedback. Please try again later.";
+  }
+};
