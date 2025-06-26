@@ -8,29 +8,8 @@ const LandingPage = () => {
       <div className="text-center py-20 px-4 text-white">
         <h1 className="text-5xl font-bold mb-4">🚁 Rotorcraft Trainer</h1>
         <p className="text-lg max-w-2xl mx-auto">
-          Train smarter. Fly safer. AI-powered scenario training, check-ride prep, and a rotorcraft knowledge assistant — all in one.
+          Train smarter. Fly safer. AI-powered scenario training and check-ride prep for helicopter pilots — all in one streamlined web app.
         </p>
-      </div>
-
-      <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <button
-          onClick={() => navigate("/scenario")}
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 px-6 rounded-xl transition"
-        >
-          Start Scenario Training
-        </button>
-        <button
-          onClick={() => navigate("/checkride")}
-          className="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl transition"
-        >
-          Checkride Prep
-        </button>
-        <button
-          onClick={() => navigate("/assistant")}
-          className="bg-gray-100 hover:bg-gray-300 text-black font-semibold py-3 px-6 rounded-xl transition"
-        >
-          Ask Knowledge Assistant
-        </button>
       </div>
 
       {/* Login and Signup Buttons */}
