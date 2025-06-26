@@ -21,15 +21,9 @@ const HomePage = () => {
         </button>
         <button
           onClick={() => navigate("/checkride")}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition"
         >
           Checkride Prep
-        </button>
-        <button
-          onClick={() => navigate("/assistant")}
-          className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition"
-        >
-          Ask Knowledge Assistant
         </button>
       </div>
     </div>
