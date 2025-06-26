@@ -86,14 +86,19 @@ export default function ScenarioForm({ scenarioId, onClose }) {
       return;
     }
 
-    const scenario = {
-      id: scenarioId || title.replace(/\s+/g, ""),
+    // Build scenario object without id for add, with id for update
+    let scenario = {
       title,
       description,
       steps: steps.map(({ id, ...rest }) => rest),
       debriefSuccess,
       debriefFail,
     };
+
+    if (scenarioId) {
+      scenario = { ...scenario, id: scenarioId }; // Only add id for update
+    }
+
     setLoading(true);
     const action = scenarioId ? updateScenario : addScenario;
     action(scenario)
