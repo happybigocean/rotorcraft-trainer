@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebaseConfig";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,12 @@ const SignupPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Register role in Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        email: userCredential.user.email,
+        role: "user" // or "admin" if registering an admin
+      });
       navigate("/scenario");
     } catch (err) {
       setError("Signup failed. Try a different email.");

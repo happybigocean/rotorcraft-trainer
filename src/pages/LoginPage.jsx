@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebaseConfig";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,8 +14,26 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/home");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // Get user role from Firestore
+      const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+      const role = userDoc.exists() ? userDoc.data().role : "user";
+
+      // Save email and role to localStorage
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          email: userCredential.user.email,
+          role: role
+        })
+      );
+
+      // Example: redirect based on role
+      if (role === "admin") {
+        navigate("/admin/scenario");
+      } else {
+        navigate("/home");
+      }
     } catch (err) {
       setError("Login failed. Check your credentials.");
     }
