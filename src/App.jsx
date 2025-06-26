@@ -10,7 +10,9 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProtectedLayout from "./components/ProtectedLayout";
 import HomePage from "./pages/Home";
+import AdminHome from "./pages/admin/AdminHome";
 import AdminScenario from "./pages/admin/AdminScenario";
+import CheckrideQuestionsManager from "./pages/admin/CheckrideQuestionsManager";
 import { ProtectedRoute, AdminRoute } from "./routes/ProtectedRoutes";
 
 const handleLogout = async () => {
@@ -29,11 +31,33 @@ const App = () => (
 
       {/* Admin Protected Page */}
       <Route
+        path="/admin/home"
+        element={
+          <AdminRoute>
+            <ProtectedLayout onLogout={handleLogout}>
+              <AdminHome />
+            </ProtectedLayout>
+          </AdminRoute>
+        }
+      />
+
+      <Route
         path="/admin/scenario"
         element={
           <AdminRoute>
             <ProtectedLayout onLogout={handleLogout}>
               <AdminScenario />
+            </ProtectedLayout>
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/checkride"
+        element={
+          <AdminRoute>
+            <ProtectedLayout onLogout={handleLogout}>
+              <CheckrideQuestionsManager />
             </ProtectedLayout>
           </AdminRoute>
         }

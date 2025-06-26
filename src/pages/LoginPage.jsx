@@ -30,7 +30,7 @@ const LoginPage = () => {
 
       // Example: redirect based on role
       if (role === "admin") {
-        navigate("/admin/scenario");
+        navigate("/admin/home");
       } else {
         navigate("/home");
       }
